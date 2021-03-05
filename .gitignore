@@ -6,3 +6,5 @@ models/*
 !models/_.txt
 video_temp/*
 video_temp
+Videos/*
+Videos

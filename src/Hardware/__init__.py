@@ -8,6 +8,7 @@ if os.environ.get("YASK_HARDWARE") == "SIM":
     Hardware = HardwareSim
 elif os.environ.get("YASK_HARDWARE") == "VIDEO":
     from Hardware.Video import HardwareVideo
+    # HardwareVideo.params.
     Hardware = HardwareVideo
 else:
     from Hardware.Real import HardwareReal

@@ -1,4 +1,4 @@
-from Hardware import Hardware
+# from Hardware import Hardware
 from Utils.VideoRecorder import VideoRecorder
 
 d = True
@@ -12,7 +12,7 @@ import os
 import sys
 
 class Main:
-    def __init__(self, PROJECT_FOLDER):
+    def __init__(self, PROJECT_FOLDER, hard):
         self.d = d
         self.last = 0
         self.angle_pd = PD(kP=KP, kD=KD)
@@ -20,7 +20,7 @@ class Main:
         self.exit = False
 
         self.PROJECT_FOLDER = PROJECT_FOLDER
-        self.hard = Hardware()
+        self.hard = hard
         print(self.hard)
 
         self.frame_shape = self.hard.get()[1].shape
@@ -52,6 +52,8 @@ class Main:
                 self.record_original.write(frame)
                 ang, spd = self.run(frame.copy())
                 self.hard.set(ang, spd)
+                if self.exit:
+                    break
             elif status == "ERROE":
                 print(f"Error")
                 break
@@ -69,7 +71,7 @@ class Main:
         else:
             return False
 
-    def angle(self, frame):
+    def angleC(self, frame):
         image = frame.copy()
         left, right = centre_mass(image, d=self.d)
         angle = self.angle_pd.calc(left=left, right=right)
@@ -88,7 +90,7 @@ class Main:
 
     def run(self, frame):
         perspective = self.vision_func(frame=frame)
-        self.angle = self.angle(frame=perspective)
+        self.angle = self.angleC(frame=perspective)
         cv2.imshow("perspective", perspective)
         stop_line = self.detect_stop_line(frame=perspective)
         if stop_line:

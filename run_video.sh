@@ -2,6 +2,11 @@
 
 
 YASK_HARDWARE="VIDEO"
-python3 main.py
+
+echo "Video: $1"
+# video_path=""
+# read video_path
+
+python3 main.py "$1"
 
 
