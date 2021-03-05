@@ -1,4 +1,9 @@
-## **<TEAMNAME>**`s code for car-like robot autopilot task 
+## **YASK** team 
+
+### Deploy script
+"""shell
+./deploy.sh 
+"""
 
 
 ### TODO

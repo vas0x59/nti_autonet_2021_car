@@ -6,7 +6,7 @@ PROJECT_PATH = sys.argv[1]
 
 def select_models() -> list:
     global PROJECT_PATH
-    print("MODELS")
+    print("Select models")
     out_files = []
     models_folders = os.listdir(PROJECT_PATH + "/models")
     for i, mf in enumerate(models_folders):
