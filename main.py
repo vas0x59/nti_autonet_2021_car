@@ -1,6 +1,7 @@
 import sys
 import os
 from scripts.colors import *
+import traceback
 
 PROJECT_FOLDER = os.path.dirname(os.path.realpath(__file__))
 # print(_f)
@@ -22,10 +23,15 @@ print()
 print()
 
 exec_f_spec = importlib.util.spec_from_file_location("module.name", exec_f_name)
-exec_f = importlib.util.module_from_spec(exec_f_spec)
+exec_f = importlib.util.module_from_spec(exec_f_spec)   
 exec_f_spec.loader.exec_module(exec_f)
-# foo.MyClass()
+try:
+    exec_f.Main(PROJECT_FOLDER)
+except Exception as ex:
+    # template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+    # message = template.format(, ex.args)
+    print(f"{RED}[main.py]{ENDC} Exception {type(ex).__name__} {ex.args} in Main\n {traceback.format_exc()}")
 
 # if os.environ.get("YASK_HARDWARE") != "SIM"
-
+print(GREEN+f"[main.py] {ENDC} Finish {exec_f_name}")
 
