@@ -3,13 +3,16 @@ import sys
 import time 
 from colors import *
 PROJECT_PATH = sys.argv[1]
-
+print()
+print(f"{GREEN}[Deploy script]{ENDC} Started")
+print()
 
 def select_models() -> list:
     global PROJECT_PATH
     print("Select models")
     out_files = []
     models_folders = os.listdir(PROJECT_PATH + "/models")
+    models_folders = [mf for mf in models_folders if mf !="_.txt"]
     for i, mf in enumerate(models_folders):
         print(f"[{i}] {mf} ", end="\n")
     print()

@@ -12,6 +12,9 @@
 
 
 ### TODO
+ - [ ] Simple test
+ - [ ] Video recorder
+ - [ ] Video uploader
  - [ ] Lane detection
  - [ ] "Camera matrix/model"
  - [ ] Navigation 

@@ -26,6 +26,6 @@ exec_f = importlib.util.module_from_spec(exec_f_spec)
 exec_f_spec.loader.exec_module(exec_f)
 # foo.MyClass()
 
-
+# if os.environ.get("YASK_HARDWARE") != "SIM"
 
 
