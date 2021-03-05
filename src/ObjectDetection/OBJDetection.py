@@ -1,7 +1,7 @@
-import Data
+# import Data
 import numpy as np
-from obj_detectors.Detectors.YoloOpencvDetector import YoloOpencvDetector
-from obj_detectors.Detectors import Utils
+from ObjectDetection.obj_detectors.Detectors.YoloOpencvDetector import YoloOpencvDetector
+from ObjectDetection.obj_detectors.Detectors import Utils
 import cv2
 import time
 cv = cv2
@@ -12,7 +12,7 @@ def get_centre(p):
     return (p[0] + (p[2] // 2), p[1] + (p[3] // 2))
 
 class OBJDetection:
-    def __init__(self):
+    def __init__(self, PR_DIR):
         # self.drive_data = drive_data
         self.detector = None
         self.detector_std = None
@@ -20,9 +20,9 @@ class OBJDetection:
         # self.model_c_path = "yolo_sign_model_v1/yolov3_signs_v1.cfg"
         # self.model_n_path = "yolo_sign_model_v1/signs.names"
         # self.model_w_path = "yolo_sign_v2/yolov3_cfg_381000.weights" # signs200 all197 208 ok
-        self.model_w_path ="yolo_sign_v2/yolov3_cfg_524000.weights"
-        self.model_c_path = "yolo_sign_v2/yolov3_cfg.cfg"
-        self.model_n_path = "yolo_sign_v2/classes.txt"
+        self.model_w_path = PR_DIR+ "/models/yolo_sign_v2/yolov3_cfg_524000.weights"
+        self.model_c_path = PR_DIR+ "/models/yolo_sign_v2/yolov3_cfg.cfg"
+        self.model_n_path = PR_DIR+ "/models/yolo_sign_v2/classes.txt"
         self.model_res = 320
         self.sings_filter = ["pedestrian", "stop", "parking",
                              "a_unevenness", "road_works", "way_out", "no_drive", "no_entery"]

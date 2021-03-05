@@ -3,7 +3,7 @@ import time
 import cv2
 import os
 import time
-from numba import jit
+# from numba import jit
 class YoloOpencvDetector:
     def __init__(self, cfg, wh, CLASSESPath= "./coco.names"):
         self.net = cv2.dnn.readNetFromDarknet(cfg, wh) # "./yolov3-tiny.cfg" "./yolov3-tiny.weights"

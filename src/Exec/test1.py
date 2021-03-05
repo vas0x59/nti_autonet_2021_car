@@ -11,6 +11,8 @@ import traceback
 import os 
 import sys
 
+from ObjectDetection import OBJDetection
+
 class Main:
     def __init__(self, PROJECT_FOLDER, hard):
         self.d = d
@@ -21,7 +23,13 @@ class Main:
 
         self.PROJECT_FOLDER = PROJECT_FOLDER
         self.hard = hard
+        self.objd = OBJDetection.OBJDetection(PROJECT_FOLDER)
+        self.objd.svet_enable = True
+        self.objd.load()
+
         print(self.hard)
+        for _ in range(4):
+            self.hard.get()
 
         self.frame_shape = self.hard.get()[1].shape
 
@@ -89,6 +97,9 @@ class Main:
         self.exit = True
 
     def run(self, frame):
+        img_out, ssnow, sign, svet_sign, person = self.objd.run(frame.copy())
+        cv2.imshow("objd", img_out)
+        print("[OBJD]", ssnow, sign, svet_sign, person)
         perspective = self.vision_func(frame=frame)
         self.angle = self.angleC(frame=perspective)
         cv2.imshow("perspective", perspective)
