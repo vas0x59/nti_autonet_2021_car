@@ -38,7 +38,9 @@ while True:
 print()
 folders += ["configs"]
 folders += ["src"]
+folders += ["scripts/colors.py", "scripts/deploy.py"]
 folders += ["main.py"]
+folders += ["LOGO.txt"]
 folders += ["Raspberry"]
 # folders = list(map(lambda x: x, folders))
 deloy_tag = str(int(time.time()))
@@ -46,6 +48,7 @@ print(GREEN + "last_deploy_tag: " + str(deloy_tag) + ENDC + "\n")
 out_f = f"deploy_temp/YASK_pack_{deloy_tag}.zip" 
 open(PROJECT_PATH+"/last_deploy.txt", "w").write(deloy_tag)
 # print(f"zip -r -9 {out_f} {' '.join(folders)}")
+folders += ["last_deploy.txt"]
 os.system(f"zip -r -9 {out_f} {' '.join(folders)}")
 print(f"SAVED {out_f}")
 print(GREEN + "last_deploy_tag: " + str(deloy_tag) + ENDC + "\n")
