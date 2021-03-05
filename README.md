@@ -1,8 +1,13 @@
-## **YASK** team 
+# **YASK** team 
 
 ### Deploy script
 """shell
 ./deploy.sh 
+"""
+
+### Run in sim 
+"""shell
+./run_sim.sh
 """
 
 
