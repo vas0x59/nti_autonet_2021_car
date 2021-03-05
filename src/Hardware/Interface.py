@@ -6,6 +6,6 @@ class IHardware:
         pass
     def set(self, servo: float, motor: float):
         pass
-    def get(self) -> np.array:
-        return np.zeros((480, 640, 3))
+    def get(self):
+        return "Error", np.zeros((480, 640, 3))
     

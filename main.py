@@ -27,6 +27,8 @@ exec_f = importlib.util.module_from_spec(exec_f_spec)
 exec_f_spec.loader.exec_module(exec_f)
 try:
     exec_f.Main(PROJECT_FOLDER)
+except KeyboardInterrupt:
+    print(f"{RED}[main.py]{ENDC} KeyboardInterrupt")
 except Exception as ex:
     # template = "An exception of type {0} occurred. Arguments:\n{1!r}"
     # message = template.format(, ex.args)
