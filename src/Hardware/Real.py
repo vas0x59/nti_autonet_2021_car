@@ -8,15 +8,15 @@ import Utils.colors
 
 class HardwareReal(IHardware):
     DEFAULT_CMD = "s"
-    IPadress = "192.168.1.104"
+    IPadress = "192.168.4.1"
 
     def __init__(self, **params):
-        self.params = params
-        self.sock = socket.socket()
-        self.server_address = (self.IPadress, 1080)
-        self.sock.connect(server_address)
+        self._params = params
+        self._sock = socket.socket()
+        self._server_address = (self.IPadress, 1080)
+        self._sock.connect(self._server_addres)
         print("{Utils.colors.GREEN}[HardwareReal]{Utils.colors.ENDC} Connection Established")
-        self.client = beholder.Client(zmq_host=self.IPadress,
+        self._client = Beholder.beholder.Client(zmq_host=self.IPadress,
                          # zmq_host="192.168.1.145",
                          zmq_port=12345,
                          rtp_host="192.168.1.208",
@@ -31,32 +31,32 @@ class HardwareReal(IHardware):
                          # width=640,
                          # height=480,
                          framerate=30,
-                         encoding=beholder.Encoding.MJPEG,  # MJPEG,    #H264
+                         encoding=Beholder.beholder.Encoding.MJPEG,  # MJPEG,    #H264
                          limit=20)
-        self.client.start()
+        self._client.start()
         print("{Utils.colors.GREEN}[HardwareReal]{Utils.colors.ENDC} client start")
-        status, frame = self.client.get_frame(0.25)
-        status, frame = self.client.get_frame(0.25)
-        status, frame = self.client.get_frame(0.25)
+        status, frame = self._client.get_frame(0.25)
+        status, frame = self._client.get_frame(0.25)
+        status, frame = self._client.get_frame(0.25)
 
         
     def set(self, servo: float, motor: float):
         cmd = 'H00/' + str(motor) + '/' + str(servo) + "E"
         message = cmd.encode()
-        self.sock.sendall(message)
+        self._sock.sendall(message)
 
 
     def get(self):
-        status, frame = self.client.get_frame(0.25)
-        if status == beholder.Status.OK:
+        status, frame = self._client.get_frame(0.25)
+        if status == Beholder.beholder.Status.OK:
             return "OK", frame
-        elif status == beholder.Status.EOS:
+        elif status == Beholder.beholder.Status.EOS:
             return "Error", np.zeros((480, 640, 3))
             # break
-        elif status == beholder.Status.Error:
+        elif status == Beholder.beholder.Status.Error:
             return "Error", np.zeros((480, 640, 3))
             # break
-        elif status == beholder.Status.Timeout:
+        elif status == Beholder.beholder.Status.Timeout:
             return "Timeout", np.zeros((480, 640, 3))
             
     # pass
