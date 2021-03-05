@@ -1,4 +1,4 @@
-## <TEAMNAME>`s code for car-like robot autopilot task 
+## **<TEAMNAME>**`s code for car-like robot autopilot task 
 
 
 ### TODO
@@ -13,10 +13,10 @@
 
 
 ### Callibrate camera ?, Get approximate camera matrix ?
-Get camera matrix from known information without special actions for example: detect points on the ground with known coordinates.
+Get camera matrix from known information without special actions, for example: detect points on the ground with known coordinates.
 
 
-### Lane detection
+### Lane/Stopline detection
 
 
 ### Crossroads
@@ -24,7 +24,7 @@ While the vehicle is driving through crossroads the stopline/lane detection algo
 And optical flow algorithms is used for addition accuracy improvemnts in velocity control.
 
 
-### Stopline/lane detection algorithm for crossroads 
+### Stopline/lane detection/analysis algorithm for crossroads 
 
 
 ### Optical flow
@@ -34,4 +34,6 @@ Optical flow is used when the vehicle is driving through crossroads.
 ### Signs/Traffic/Pedestrian detection
 One Yolo for all? yes
 Grab Yolo model from НТИ АТС 2020? yes
+
+
 
