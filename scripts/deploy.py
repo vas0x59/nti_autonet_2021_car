@@ -1,6 +1,7 @@
 import os
 import sys
 import time 
+from colors import *
 PROJECT_PATH = sys.argv[1]
 
 
@@ -35,12 +36,16 @@ print()
 folders += ["configs"]
 folders += ["src"]
 folders += ["main.py"]
+folders += ["Raspberry"]
 # folders = list(map(lambda x: x, folders))
-out_f = f"deploy_temp/YASK_pack_{int(time.time())}.zip" 
+deloy_tag = str(int(time.time()))
+print(GREEN + "last_deploy_tag: " + str(deloy_tag) + ENDC + "\n")
+out_f = f"deploy_temp/YASK_pack_{deloy_tag}.zip" 
+open(PROJECT_PATH+"/last_deploy.txt", "w").write(deloy_tag)
 # print(f"zip -r -9 {out_f} {' '.join(folders)}")
 os.system(f"zip -r -9 {out_f} {' '.join(folders)}")
 print(f"SAVED {out_f}")
-
+print(GREEN + "last_deploy_tag: " + str(deloy_tag) + ENDC + "\n")
 # print("all:")
 
 ##### ZIP

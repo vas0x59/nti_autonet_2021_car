@@ -1,5 +1,5 @@
 from Hardware.Interface import IHardware
-# import Beholder.beholder
+import Beholder.beholder
 import socket
 import numpy as np
 import cv2

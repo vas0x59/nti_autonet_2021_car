@@ -1,7 +1,7 @@
 #!/bin/bash 
 
 
-python3 ./deploy/deploy.py $(pwd)
+python3 ./scripts/deploy.py $(pwd)
 
 
 
