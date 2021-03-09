@@ -28,8 +28,8 @@ import importlib.util
 PROJECT_FOLDER = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(PROJECT_FOLDER+"/src")
 last_deploy_tag = open(PROJECT_FOLDER+"/last_deploy.txt", "r").read().strip()
-LOGO = open(PROJECT_FOLDER+"/LOGO.txt", "r").read()
-LOGO += GREEN + "last_deploy_tag: " + str(last_deploy_tag) + ENDC + "\n"
+# LOGO = open(PROJECT_FOLDER+"/LOGO.txt", "r").read()
+LOGO = GREEN + "last_deploy_tag: " + str(last_deploy_tag) + ENDC + "\n"
 print(LOGO)
 ################################################################################
 
@@ -42,16 +42,16 @@ print(LOGO)
 if os.environ.get("YASK_HARDWARE") == "SIM":
     from Hardware.Sim import HardwareSim
     print(f"{YELLOW}[main.py]{ENDC}  Hardware: SIM")
-    hard = HardwareSim(frame_wh=(640, 480), img_topic="/camera1/image_raw")
+    hard = HardwareSim((1280, 720), img_topic="/camera1/image_raw")
 elif os.environ.get("YASK_HARDWARE") == "VIDEO":
     from Hardware.Video import HardwareVideo
     # HardwareVideo.params.
     print(f"{YELLOW}[main.py]{ENDC}  Hardware: VIDEO")
-    hard = HardwareVideo(file=sys.argv[1])
+    hard = HardwareVideo((1280, 720), file=sys.argv[1])
 else:
     from Hardware.Real import HardwareReal
     print(f"{YELLOW}[main.py]{ENDC}  Hardware: REAL")
-    hard = HardwareReal()
+    hard = HardwareReal((1280, 720))
 
 
 exec_f_name = PROJECT_FOLDER+"/src/Exec/"+json.loads(open(PROJECT_FOLDER+"/configs/exec.json", "r").read())["exec"]

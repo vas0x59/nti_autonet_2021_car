@@ -153,7 +153,7 @@ class OBJDetection:
                         0.5, color, 2)
             if svet_label == "nothing" and len(self.svet_hist) > 0:
                 del self.svet_hist[-1]
-            print(self.svet_hist)
+            # print(self.svet_hist)
         # print(svet_label)
         # boxes, classIDs, confidences = self.detector_std.detect(
         #     frame, s=(self.model_res, self.model_res))

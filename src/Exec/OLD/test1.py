@@ -59,6 +59,7 @@ class Main:
 
     def main1(self):
         r = Utils.Rate(20)
+        print(f"{Utils.colors.YELLOW}[Main]{Utils.colors.ENDC} Started ")
         while cv2.waitKey(1) != ord("q"):
             status, frame = self.hard.get()
             if status == "OK":
@@ -101,6 +102,7 @@ class Main:
         self.speed = stop_speed
         # exit()
         time.sleep(0.1)
+        self.hard.set(90, self.speed)
         self.exit = True
 
     def run(self, frame):
