@@ -36,28 +36,33 @@ class Rate:
         self._prev_t = now
         return 1/(now - pt)
 
-
-# @dataclass
-# class CameraIntrinsic:
-
 def euclidean_to_homogeneous(p_e: np.ndarray) -> np.ndarray:
+    p_e = np.array(p_e)
     if len(p_e.shape) > 1:
-        if p_e.shape[1] == 1:
-            return np.expand_dims(np.append(p_e, np.array([1])), 1)
-        else:
-            return np.array([np.append(p_e[0], 1)]).transpose()
+        a = np.zeros((p_e.shape[0], p_e.shape[1]+1))
+        a[:, :p_e.shape[1]] = p_e
+        a[:, p_e.shape[1]] = 1
+        # if p_e.shape[1] == 1:
+        #     return np.expand_dims(np.append(p_e, np.array([1])), 1)
+        # else:
+        #     return np.array([np.append(p_e[0], 1)]).transpose()
+        return a
     else:
         return np.append(p_e, 1)
 
 
 def homogeneous_to_euclidean(p_h: np.ndarray) -> np.ndarray:
-    return np.array(p_h[:-1]/p_h[-1][0])
+    p_h = np.array(p_h)
+    if len(p_h.shape) > 1:
+        return np.array(p_h[:, :-1] / p_h[:, -1][0])
+    else:
+        return np.array(p_h[:-1]/p_h[-1][0])
 
 
 def get_rotation_matrix_2(angle: float) -> np.array:
     b = [[] for _ in range(2)]
-    b[0] = [math.cos(angle), -math.sin(angle)]
-    b[1] = [math.sin(angle), math.cos(angle)]
+    b[0] = [math.cos(angle), math.sin(angle)]
+    b[1] = [-math.sin(angle), math.cos(angle)]
     return np.array(b)
 
 
@@ -95,79 +100,95 @@ def rotate_3d_xyz(x: float, y:  float, z: float):
     a[3, 3] = 1
     return a
 
+class Transformator:
 
-class TF:
-    # @dataclass()
-    class Transform:
-
-        tr_mat = None
-        def __init__(self, tr_mat):
-            tr_mat = tr_mat
-            # pass
-
-        @classmethod
-        def from_xyzypr(cls, x: float,
-            y: float,
-            z: float,
-            yaw: float,
-            pitch: float,
-            roll: float):
-            tr_mat = np.linalg.inv(rotate_3d_xyz(yaw, pitch, roll) @ move_3d_xyz(x, y, z))
-            return cls(tr_mat)
-
-        @classmethod
-        def inv(cls, o):
-            return cls(np.linalg.inv(o.tr_mat))
-
-        def transform(self, pnts):
-            pnts = np.array(pnts)
-            h_pnts = euclidean_to_homogeneous(pnts)
-            h_pnts_tr = h_pnts @ self.tr_mat
-            return homogeneous_to_euclidean(h_pnts_tr)
-        def transform_rot(self, pnts):
-            pnts = np.array(pnts)
-            h_pnts = euclidean_to_homogeneous(pnts)
-            t = np.array(self.tr_mat).copy()
-            t[0:2, 3] = 0
-            h_pnts_tr = h_pnts @ t
-            return homogeneous_to_euclidean(h_pnts_tr)
-        # @classmethod
-        # def from_tr_mat(cls, tr_mat):
-        #     tr_ma
-
-    def __init__(self):
-        # pass
-        self.tree = dict()
-    def _add_tr(self, parent, child, tr:Transform):
-        p = self.tree.get(parent, None)
-        if p is None:
-            self.tree[parent] = dict()
-        self.tree[parent][child]  = tr
-    def set_transform(self, parent, child, tr:Transform):
-        self._add_tr(parent, child, tr)
-        tr_inv = self.Transform.inv(tr)
-        self._add_tr(child, parent, tr_inv)
-    def get_transform(self, parent, child) -> Transform:
-        p = self.tree.get(parent, None)
-        if p is None:
-            return None
-        c = p.get(child, None)
-        return c
-
-    def transform(self, parent, child, points):
-        points = np.array(points)
-        tr = self.get_transform(parent, child)
-        if tr is not None:
-            return tr.transform(points)
+    def __init__(self, parent, child):
+        self.child = child
+        self.basis = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype="float64")
+        self.translation = np.array([0, 0, 0], dtype="float64")
+        self.parent = parent
+#         self.name = None
+    def _tr_xyz(self, x, y, z):
+        self.translation += np.array([x, y, z])
+    def _tr_rot(self, x, y, z):
+        self.basis = get_rotation_matrix_3_xyz(x, y, z) @ self.basis
+    def set(self, x, y, z, rx, ry, rz):
+        self.basis = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype="float64")
+        self.translation = np.array([0, 0, 0], dtype="float64")
+#         self.parent = None
+        self._tr_xyz(x, y, z)
+        self._tr_rot(rx, ry, rz)
+#         self.parent = p
+    def transform_pnts_to_parent(self, pnt):
+        ppnt = np.array(pnt)
+        for i in range(ppnt.shape[0]):
+            p = ppnt[i]
+            p_par = (np.linalg.inv(self.basis) @ p.T).T
+            p_par += self.translation
+            ppnt[i] = p_par
+        return ppnt
+    def transform_pnts_from_parent(self, pnt):
+#         ppnt = np.array(pnt)
+# #         if ppnt.shape
+#         p_s = ppnt - self.translation
+#         p_s = (self.basis @ p_s.transpose()).transpose()
+#         return p_s
+        ppnt = np.array(pnt)
+        for i in range(ppnt.shape[0]):
+            p = ppnt[i]
+            p_par = p - self.translation
+            p_par = (self.basis @ p_par.T).T
+            ppnt[i] = p_par
+        return ppnt
+    def transform_r_pnts_to_parent(self, pnt):
+        ppnt = np.array(pnt)
+        for i in range(ppnt.shape[0]):
+            p = ppnt[i]
+            p_par = (np.linalg.inv(self.basis) @ p.T).T
+#             p_par += self.translation
+            ppnt[i] = p_par
+        return ppnt
+    def transform_r_pnts_from_parent(self, pnt):
+#         ppnt = np.array(pnt)
+# #         if ppnt.shape
+#         p_s = ppnt - self.translation
+#         p_s = (self.basis @ p_s.transpose()).transpose()
+#         return p_s
+        ppnt = np.array(pnt)
+        for i in range(ppnt.shape[0]):
+            p = ppnt[i]
+            p_par = p
+            p_par = (self.basis @ p_par.T).T
+            ppnt[i] = p_par
+        return ppnt
+    def get_tr_mat_from_parent(self):
+        a = move_3d_xyz(-self.translation[0], -self.translation[1], -self.translation[2])
+        b = np.zeros((4, 4))
+        b[3, 3] = 1
+        b[0:3, 0:3] = self.basis
+        a = b @ a
+#         a[0:3, 3] = -self.translation
+#         a[0:3, 0:3] = self.basis
+#         a[3, 3] = 1
+#         a[1, 3] = y
+#         a[2, 3] = z
+        print(a, self.basis)
+        return a
+    def get_tr_mat_to_parent(self):
+        a = np.zeros((4, 4))
+        a[0:3, 0:3] = np.linalg.inv(self.basis)
+        a[0:3, 3] = self.translation
+        a[3, 3] = 1
+#         a[1, 3] = y
+#         a[2, 3] = z
+        return a
+    @classmethod
+    def concat(cls, old_med, med_new):
+        if old_med.child == med_new.parent:
+            old_new = cls(old_med.parent, med_new.child)
+            trans = old_med.translation + old_med.basis @ med_new.translation
+            old_new.translation = trans
+            old_new.basis = med_new.basis @ old_med.basis
+            return old_new
         else:
             return None
-
-    def transform_r(self, parent, child, points):
-        points = np.array(points)
-        tr = self.get_transform(parent, child)
-        if tr is not None:
-            return tr.transform_rot(points)
-        else:
-            return None
-    # def _find_transform
-

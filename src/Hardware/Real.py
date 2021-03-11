@@ -30,6 +30,7 @@ class HardwareReal(IHardware):
         self._server_address = (self.IPADDRESS, 1080)
         self._sock.connect(self._server_address)
         print(f"{Utils.colors.GREEN}[HardwareReal]{Utils.colors.ENDC} Connection Established")
+        print("CCCCC", self.IPADDRESS)
         self._client = beholder.Client(zmq_host=self.IPADDRESS,
                          # zmq_host="192.168.1.145",
                          zmq_port=12345,
