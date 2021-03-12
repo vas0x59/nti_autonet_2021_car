@@ -6,7 +6,7 @@ import time
 
 class SSDOpencvDetetor:
     def __init__(self, cfg, wh, CLASSESPath= "./coco.names"):
-        self.net = cv2.dnn.readNetFromDarknet(cfg, wh) # "./yolov3-tiny.cfg" "./yolov3-tiny.weights"
+        self.net = cv2.dnn.readNetFromCaffe(cfg, wh) # "./yolov3-tiny.cfg" "./yolov3-tiny.weights"
         self.ln = self.net.getLayerNames()
         self.ln = [self.ln[i[0] - 1] for i in self.net.getUnconnectedOutLayers()]
 

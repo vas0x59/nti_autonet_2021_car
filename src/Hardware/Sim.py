@@ -90,7 +90,13 @@ class HardwareSim(IHardware):
         # tw.linear.x = (motor-1500)*(0.15/50)
         # tw.angular.z = math.radians(np.clip(-(90-servo), -90, 90))*1.1
         # self._pub.publish(tw)
+        # print("(motor-1500)*(0.4/50)", (motor-1500)*(0.4/50))
         motor1, motor2, wh1, wh2 = self._as.calcCmdServo((motor-1500)*(0.4/50), -(90-servo)*1.1)
+        # print(motor2, motor1)
+        if motor1 == 0:
+            motor1 = -0.01
+        if motor2 == 0:
+            motor2 = -0.01
         self._lh.publish(wh1)
         self._rh.publish(wh2)
         self._lr.publish(motor1)

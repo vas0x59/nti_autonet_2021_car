@@ -137,17 +137,18 @@ class Main:
         # exit()
 
     def run(self, frame):
-        img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), thresh=15, conf=0.3)
 
+        img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), thresh=6, conf=0.15)
+        print("COUNT", self.objd.person_calc)
         perspective = self.vision_func(frame=frame)
         self.angle = self.angele(frame=perspective)
         cv2.imshow("perspective", perspective)
         cv2.imshow("img_out", img_out)
-        # stop_line = self.detect_stop_line(frame=perspective)
-        # if stop_line:
-        #     print("STOP_LINE")
-        #     self.speed = 1450
-        #     self.stopeer_f()
+        stop_line = self.detect_stop_line(frame=perspective)
+        if stop_line:
+            print("STOP_LINE")
+            self.speed = 1450
+            self.stopeer_f()
         # send_cmd('H00/' + str(speed) + '/' + str(angle) + "E")
         # else:
         # send_cmd('H00/' + '1450' + '/' + str(angle) + "E")

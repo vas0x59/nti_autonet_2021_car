@@ -40,17 +40,18 @@ print(LOGO)
 # hard = Hardware()
 
 if os.environ.get("YASK_HARDWARE") == "SIM":
-    from Hardware.Sim import HardwareSim
     print(f"{YELLOW}[main.py]{ENDC}  Hardware: SIM")
+    from Hardware.Sim import HardwareSim
     hard = HardwareSim((1280, 720), img_topic="/camera1/image_raw")
 elif os.environ.get("YASK_HARDWARE") == "VIDEO":
+    print(f"{YELLOW}[main.py]{ENDC}  Hardware: VIDEO")
     from Hardware.Video import HardwareVideo
     # HardwareVideo.params.
-    print(f"{YELLOW}[main.py]{ENDC}  Hardware: VIDEO")
+
     hard = HardwareVideo((1280, 720), file=sys.argv[1])
 else:
-    from Hardware.Real import HardwareReal
     print(f"{YELLOW}[main.py]{ENDC}  Hardware: REAL")
+    from Hardware.Real import HardwareReal
     hard = HardwareReal((1280, 720))
 
 

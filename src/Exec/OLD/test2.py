@@ -35,12 +35,12 @@ class Main:
         self.go = 1
         self.next = 0
         self.timeNow = 0
-        self.kyda = ['r', 'l', 'f']  # Здесь будут хранится куда ему надо будет поварачиваться, после каждого пройденого маршрута, этот элемент будет удалаться
+        self.kyda = []  # Здесь будут хранится куда ему надо будет поварачиваться, после каждого пройденого маршрута, этот элемент будет удалаться
         self.nKyda = len(self.kyda)  # Количество маршрутов
         self.objd.svet_enable = True
         self.objd.sign_enable = True
         self.signStop = 0
-        self.angle = 87
+        self.angle = SERVO_0
         # self.tf = Utils.TF()
         # self.tf.set_transform("footprint", "camera_optical", Utils.TF.Transform.from_xyzypr(0, 0, 0.3, 0, 0, 0) @ Utils.TF.Transform.from_xyzypr(0, 0, 0, -math.pi/2, 0, -math.pi/2))
         # self.ld = LaneDetector(region=[[0.1, 0.1], [0.2]])
@@ -95,6 +95,7 @@ class Main:
                 cv2.imshow("Frame", frame)
                 self.record_original.write(frame)
                 ang, spd = self.run(frame.copy())
+                print(ang, spd)
                 self.hard.set(ang, spd)
                 if self.exit:
                     break
@@ -121,18 +122,18 @@ class Main:
         image = frame.copy()
         left, right = centre_mass(image, d=self.d)
         angle = self.angle_pd.calc(left=left, right=right)
-        if angle < 70:
-            angle = 70
-        elif angle > 106:
-            angle = 104
+        if angle < SERVO_0 - 20:
+            angle = SERVO_0 - 20
+        elif angle > SERVO_0 + 20:
+            angle = SERVO_0 + 20
         return angle
 
     def angele(self, left, right):
         angle = self.angle_pd.calc(left=left, right=right)
-        if angle < 70:
-            angle = 70
-        elif angle > 106:
-            angle = 104
+        if angle < SERVO_0 - 20:
+            angle = SERVO_0 - 20
+        elif angle > SERVO_0 + 20:
+            angle = SERVO_0 + 20
         return angle
 
     @delay(delay=0.5)
@@ -140,6 +141,7 @@ class Main:
         self.speed = stop_speed
         # exit()
         time.sleep(0.1)
+        self.speed = 1500
         # self.exit = True
 
     # def run(self, frame):
@@ -164,6 +166,7 @@ class Main:
         # if self.objd.sign_enable:
         img_out, ssnow, self.sign, svet_sign, person = self.objd.run(frame.copy(), conf=0.05)
         cv2.imshow("img_out", img_out)
+        print("COUNT", self.objd.person_calc)
         # if person:
         #     self.speed = 1500
         #     self.stopeer_f()
@@ -188,7 +191,7 @@ class Main:
                 self.objd.svet_enable = True
                 self.objd.sign_enable = False
                 print("STOP_LINE")
-                self.angle = 88
+                self.angle = SERVO_0
                 self.speed = 1500
                 self.stopeer_f()
                 self.pov = 1
@@ -198,6 +201,9 @@ class Main:
                     self.l, self.r = (1, 0) if self.kyda[0] == 'l' else (0, 1) if self.kyda[0] == 'r' else (1, 1)
                 else:
                     self.speed = 1500
+                    self.pov = 0
+                    self.go == 0
+                    # self.resetPeret()
             else:
                 self.angle = self.angele(left=left, right=right)
         else:
@@ -206,20 +212,20 @@ class Main:
                 if self.need_svet:
                     if svet_sign == "green":
                         self.go = 1
-                        self.angle = 88
+                        self.angle = SERVO_0
                         self.speed = speed
                     else:
                         self.go = 0
                         self.speed = stop_speed
             else:
-                print("234")
+                # print("234")
                 if self.l == 1 and self.r == 1:  # ехать прямо
                     if left >= 150 and self.next == 0:
                         self.next += 1
                     elif left < 150 and self.next == 1:
                         self.next += 1
                     if self.next <= 1:
-                        self.angle = 88
+                        self.angle = SERVO_0
                     else:
                         self.resetPeret()
                     print("Forward = ", time.time() - self.timeLast,"angle = {} speed = {}".format(self.angle, self.speed))
@@ -236,9 +242,9 @@ class Main:
                         elif time.time() - self.timeLast >= 3.5 and self.next == 1:
                             self.next += 1
                         if self.next == 0:
-                            self.angle = 88
+                            self.angle = SERVO_0
                         elif self.next == 1:
-                            self.angle = 88 + 25
+                            self.angle = SERVO_0 + 25
                         else:
                             self.resetPeret()
                         print("Left = ", time.time() - self.timeLast,
@@ -255,9 +261,9 @@ class Main:
                         elif time.time() - self.timeLast >= 2.5 and self.next == 1:
                             self.next += 1
                         if self.next == 0:
-                            self.angle = 87
+                            self.angle = SERVO_0
                         elif self.next == 1:
-                            self.angle = 87 - 30
+                            self.angle = SERVO_0 - 30
                         else:
                             self.resetPeret()
                         print("Right = ", time.time() - self.timeLast,"angle = {} speed = {}".format(self.angle, self.speed))

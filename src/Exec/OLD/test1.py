@@ -18,8 +18,8 @@ from Planner.LocalPlanner import LocalPlanner
 
 class Main:
     def __init__(self, PROJECT_FOLDER, hard):
-        self.SERVO_0 = 90
-        self.MOTOR_STD = 1550
+        self.SERVO_0 = SERVO_0
+        self.MOTOR_STD = speed
         self.d = d
         self.last = 0
         self.angle_pd = PD(kP=KP, kD=KD)

@@ -34,7 +34,7 @@ class HardwareReal(IHardware):
         self._client = beholder.Client(zmq_host=self.IPADDRESS,
                          # zmq_host="192.168.1.145",
                          zmq_port=12345,
-                         rtp_host="192.168.4.5",
+                         rtp_host="192.168.4.4",
                          # rtp_host="10.205.1.185",
                          rtp_port=5000,
                          rtcp_port=5001,
@@ -47,7 +47,7 @@ class HardwareReal(IHardware):
                          # height=480,
                          framerate=30,
                          encoding=beholder.Encoding.MJPEG,  # MJPEG,    #H264
-                         limit=20)
+                         limit=2)
         self._client.start()
         print(f"{Utils.colors.GREEN}[HardwareReal]{Utils.colors.ENDC} client start")
         status, frame = self._client.get_frame(0.25)
@@ -59,7 +59,7 @@ class HardwareReal(IHardware):
         self.set(87, 1500)
 
     def set(self, servo: float, motor: float):
-        cmd = 'H00/' + str(motor) + '/' + str(servo) + "E"
+        cmd = 'H00/' + str(int(motor)) + '/' + str(int(servo)) + "E"
         message = cmd.encode()
         self._sock.sendall(message)
 
